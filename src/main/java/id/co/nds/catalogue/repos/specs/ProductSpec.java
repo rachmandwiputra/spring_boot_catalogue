@@ -1,13 +1,14 @@
 package id.co.nds.catalogue.repos.specs;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.data.jpa.domain.Specification;
 import id.co.nds.catalogue.entities.ProductEntity;
 import id.co.nds.catalogue.globals.GlobalConstant;
 import id.co.nds.catalogue.models.ProductModel;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 
 public class ProductSpec implements Specification<ProductEntity> {
     private ProductModel productModel;

@@ -9,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import id.co.nds.catalogue.entities.ProductEntity;
+import id.co.nds.catalogue.entities.ProductInfoEntity;
 import id.co.nds.catalogue.exceptions.ClientException;
 import id.co.nds.catalogue.exceptions.NotFoundException;
 import id.co.nds.catalogue.globals.GlobalConstant;
 import id.co.nds.catalogue.models.ProductModel;
+import id.co.nds.catalogue.repos.ProductInfoRepo;
 import id.co.nds.catalogue.repos.ProductRepo;
 import id.co.nds.catalogue.repos.specs.ProductSpec;
+import id.co.nds.catalogue.validators.CategoryValidator;
 import id.co.nds.catalogue.validators.ProductValidator;
 
 @Service
@@ -23,7 +26,11 @@ public class ProductService implements Serializable {
     @Autowired
     private ProductRepo productRepo;
 
+    @Autowired
+    private ProductInfoRepo productInfoRepo;
+
     ProductValidator productValidator = new ProductValidator();
+    CategoryValidator categoryValidator = new CategoryValidator();
 
     public ProductEntity add(ProductModel productModel) throws ClientException {
         productValidator.notNullCheckProductId(productModel.getId());
@@ -76,6 +83,26 @@ public class ProductService implements Serializable {
         return product;
     }
 
+    public List<ProductInfoEntity> findAllByCategory(String categoryId) throws ClientException, NotFoundException {
+        categoryValidator.nullCheckCategoryId(categoryId);
+        categoryValidator.validateCategoryId(categoryId);
+
+        List<ProductInfoEntity> products = productInfoRepo.findAllByCategory(categoryId);
+        productValidator.nullCheckObject(products);
+
+        return products;
+    }
+
+    public List<ProductEntity> findProductsByCategory(String categoryId) throws ClientException, NotFoundException {
+        categoryValidator.nullCheckCategoryId(categoryId);
+        categoryValidator.validateCategoryId(categoryId);
+
+        List<ProductEntity> products = productRepo.findProductsByCategoryId(categoryId);
+        productValidator.nullCheckObject(products);
+
+        return products;
+    }
+
     public ProductEntity edit(ProductModel productModel) throws ClientException, NotFoundException {
         productValidator.nullCheckProductId(productModel.getId());
         productValidator.validateProductId(productModel.getId());
@@ -92,7 +119,7 @@ public class ProductService implements Serializable {
 
             Long count = productRepo.countByName(productModel.getName());
 
-            if (count > 0 && productModel.getName() != product.getName()) {
+            if (count > 0 && !product.getName().equals(productModel.getName())) {
                 throw new ClientException("Product name is already existed");
             }
 

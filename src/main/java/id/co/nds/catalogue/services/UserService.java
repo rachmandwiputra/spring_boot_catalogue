@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import id.co.nds.catalogue.entities.UserEntity;
+import id.co.nds.catalogue.entities.UserInfoEntity;
 import id.co.nds.catalogue.exceptions.ClientException;
 import id.co.nds.catalogue.exceptions.NotFoundException;
 import id.co.nds.catalogue.globals.GlobalConstant;
 import id.co.nds.catalogue.models.UserModel;
+import id.co.nds.catalogue.repos.UserInfoRepo;
+import id.co.nds.catalogue.repos.UserInfoRepo;
 import id.co.nds.catalogue.repos.UserRepo;
 import id.co.nds.catalogue.repos.specs.UserSpec;
+import id.co.nds.catalogue.validators.RoleValidator;
 import id.co.nds.catalogue.validators.UserValidator;
 
 @Service
@@ -21,7 +25,11 @@ public class UserService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private UserInfoRepo userInfoRepo;
+
     UserValidator userValidator = new UserValidator();
+    RoleValidator roleValidator = new RoleValidator();
 
     public UserEntity add(UserModel userModel) throws ClientException {
 
@@ -76,6 +84,26 @@ public class UserService {
         return user;
     }
 
+    public List<UserInfoEntity> findAllByRole(String categoryId) throws ClientException, NotFoundException {
+        roleValidator.nullCheckRoleId(categoryId);
+        roleValidator.validateRoleId(categoryId);
+
+        List<UserInfoEntity> users = userInfoRepo.findAllByRole(categoryId);
+        userValidator.nullCheckObject(users);
+
+        return users;
+    }
+
+    public List<UserEntity> findUsersByRole(String categoryId) throws ClientException, NotFoundException {
+        roleValidator.nullCheckRoleId(categoryId);
+        roleValidator.validateRoleId(categoryId);
+
+        List<UserEntity> users = userRepo.findUsersByRoleId(categoryId);
+        userValidator.nullCheckObject(users);
+
+        return users;
+    }
+
     public UserEntity edit(UserModel userModel) throws ClientException, NotFoundException {
         userValidator.nullCheckUserId(userModel.getId());
         userValidator.validateUserId(userModel.getId());
@@ -107,7 +135,7 @@ public class UserService {
 
             Long count = userRepo.countByCallNumber(userModel.getCallNumber());
 
-            if (count > 0 && userModel.getCallNumber() != userModel.getCallNumber()) {
+            if (count > 0 && !user.getCallNumber().equals(userModel.getCallNumber())) {
                 throw new ClientException("User callnumber is already existed");
             }
 

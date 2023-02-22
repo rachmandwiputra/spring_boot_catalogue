@@ -7,13 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "ms_product")
-public class ProductEntity {
-
+public class ProductInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,9 +23,11 @@ public class ProductEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
     @Column(name = "category_id")
     private String categoryId;
+
+    @Column(name = "category_name")
+    private String categoryName;
 
     @Column(name = "created_date")
     private Timestamp createdDate;
@@ -80,6 +80,14 @@ public class ProductEntity {
 
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return this.categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public Timestamp getCreatedDate() {

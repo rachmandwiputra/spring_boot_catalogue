@@ -1,13 +1,10 @@
 package id.co.nds.catalogue.models;
 
-public class UserModel {
+public class UserModel extends RecordModel {
     private Integer id;
     private String fullname;
     private String roleId;
     private String callNumber;
-
-    private Integer actorId;
-    private String recStatus;
 
     public Integer getId() {
         return this.id;
@@ -40,21 +37,4 @@ public class UserModel {
     public void setCallNumber(String callNumber) {
         this.callNumber = callNumber;
     }
-
-    public Integer getActorId() {
-        return this.actorId;
-    }
-
-    public void setActorId(Integer actorId) {
-        this.actorId = actorId;
-    }
-
-    public String getRecStatus() {
-        return this.recStatus;
-    }
-
-    public void setRecStatus(String recStatus) {
-        this.recStatus = recStatus;
-    }
-
 }

@@ -2,7 +2,6 @@ package id.co.nds.catalogue.controllers;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,32 +12,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import id.co.nds.catalogue.entities.ProductEntity;
-import id.co.nds.catalogue.entities.ProductInfoEntity;
+import id.co.nds.catalogue.entities.RoleEntity;
 import id.co.nds.catalogue.exceptions.ClientException;
 import id.co.nds.catalogue.exceptions.NotFoundException;
-import id.co.nds.catalogue.models.ProductModel;
+import id.co.nds.catalogue.models.RoleModel;
 import id.co.nds.catalogue.models.ResponseModel;
-import id.co.nds.catalogue.services.ProductService;
+import id.co.nds.catalogue.services.RoleService;
 
 @RestController
-@RequestMapping(value = "/product")
-public class ProductController {
+@RequestMapping(value = "/role")
+public class RoleController {
     @Autowired
-    private ProductService productService;
+    private RoleService roleService;
 
     @PostMapping(value = "/add")
-    public ResponseEntity<ResponseModel> postProductController(
-            @RequestBody ProductModel productModel) {
+    public ResponseEntity<ResponseModel> postRoleController(
+            @RequestBody RoleModel roleModel) {
         try {
-            ProductEntity product = productService.add(productModel);
+            RoleEntity role = roleService.add(roleModel);
 
             ResponseModel response = new ResponseModel();
-            response.setMessage("New product is successfully added");
-            response.setData(product);
+            response.setMessage("New role is successfully added");
+            response.setData(role);
 
             return ResponseEntity.ok(response);
         } catch (ClientException e) {
@@ -56,85 +53,15 @@ public class ProductController {
     }
 
     @GetMapping(value = "/get")
-    public ResponseEntity<ResponseModel> getAllProductController() {
+    public ResponseEntity<ResponseModel> getAllRoleController() {
         try {
-            List<ProductEntity> products = productService.findAll();
+            List<RoleEntity> categories = roleService.findAll();
 
             ResponseModel response = new ResponseModel();
             response.setMessage("Request successfully");
-            response.setData(products);
+            response.setData(categories);
 
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ResponseModel response = new ResponseModel();
-            response.setMessage("Sorry, there is a failure on our server.");
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(response);
-        }
-    }
-
-    @GetMapping(value = "/get/search")
-    public ResponseEntity<ResponseModel> searchProductsController(@RequestBody ProductModel productModel) {
-        try {
-            List<ProductEntity> products = productService.findAllByCriteria(productModel);
-
-            ResponseModel response = new ResponseModel();
-            response.setMessage("Request successfully");
-            response.setData(products);
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ResponseModel response = new ResponseModel();
-            response.setMessage("Sorry, there is a failure on our server.");
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(response);
-        }
-    }
-
-    @GetMapping(value = "/get/info")
-    public ResponseEntity<ResponseModel> getAllByCategoryController(@RequestParam String categoryId) {
-        try {
-            List<ProductInfoEntity> product = productService.findAllByCategory(categoryId);
-
-            ResponseModel response = new ResponseModel();
-            response.setMessage("Request successfully");
-            response.setData(product);
-            return ResponseEntity.ok(response);
-
-        } catch (ClientException e) {
-            ResponseModel response = new ResponseModel();
-            response.setMessage(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        } catch (NotFoundException e) {
-            ResponseModel response = new ResponseModel();
-            response.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (Exception e) {
-            ResponseModel response = new ResponseModel();
-            response.setMessage("Sorry, there is a failure on our server.");
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(response);
-        }
-    }
-
-    @GetMapping(value = "/get/category")
-    public ResponseEntity<ResponseModel> getProductsByCategoryController(@RequestParam String categoryId) {
-        try {
-            List<ProductEntity> products = productService.findProductsByCategory(categoryId);
-
-            ResponseModel response = new ResponseModel();
-            response.setMessage("Request successfully");
-            response.setData(products);
-            return ResponseEntity.ok(response);
-
-        } catch (ClientException e) {
-            ResponseModel response = new ResponseModel();
-            response.setMessage(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        } catch (NotFoundException e) {
-            ResponseModel response = new ResponseModel();
-            response.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             ResponseModel response = new ResponseModel();
             response.setMessage("Sorry, there is a failure on our server.");
@@ -144,13 +71,13 @@ public class ProductController {
     }
 
     @GetMapping(value = "/get/{id}")
-    public ResponseEntity<ResponseModel> getProductByIdController(@PathVariable Integer id) {
+    public ResponseEntity<ResponseModel> getRoleByIdController(@PathVariable String id) {
         try {
-            ProductEntity product = productService.findById(id);
+            RoleEntity role = roleService.findById(id);
 
             ResponseModel response = new ResponseModel();
             response.setMessage("Request successfully");
-            response.setData(product);
+            response.setData(role);
             return ResponseEntity.ok(response);
         } catch (ClientException e) {
             ResponseModel response = new ResponseModel();
@@ -169,14 +96,14 @@ public class ProductController {
     }
 
     @PutMapping(value = "/update")
-    public ResponseEntity<ResponseModel> putProductController(
-            @RequestBody ProductModel productModel) {
+    public ResponseEntity<ResponseModel> putRoleController(
+            @RequestBody RoleModel roleModel) {
         try {
-            ProductEntity product = productService.edit(productModel);
+            RoleEntity role = roleService.edit(roleModel);
 
             ResponseModel response = new ResponseModel();
-            response.setMessage("Product is successfully updated");
-            response.setData(product);
+            response.setMessage("Role is successfully updated");
+            response.setData(role);
 
             return ResponseEntity.ok(response);
         } catch (ClientException e) {
@@ -196,13 +123,13 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseModel> deleteProductController(@RequestBody ProductModel productModel) {
+    public ResponseEntity<ResponseModel> deleteRoleController(@RequestBody RoleModel roleModel) {
         try {
-            ProductEntity product = productService.delete(productModel);
+            RoleEntity role = roleService.delete(roleModel);
 
             ResponseModel response = new ResponseModel();
-            response.setMessage("Product is successfully deleted");
-            response.setData(product);
+            response.setMessage("Role is successfully deleted");
+            response.setData(role);
 
             return ResponseEntity.ok(response);
         } catch (ClientException e) {
@@ -220,4 +147,5 @@ public class ProductController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+
 }

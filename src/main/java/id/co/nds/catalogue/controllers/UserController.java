@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import id.co.nds.catalogue.entities.UserEntity;
+import id.co.nds.catalogue.entities.UserInfoEntity;
 import id.co.nds.catalogue.exceptions.ClientException;
 import id.co.nds.catalogue.exceptions.NotFoundException;
 import id.co.nds.catalogue.models.ResponseModel;
@@ -97,6 +99,58 @@ public class UserController {
             response.setMessage("Request successfully");
             response.setData(user);
             return ResponseEntity.ok(response);
+        } catch (ClientException e) {
+            ResponseModel response = new ResponseModel();
+            response.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        } catch (NotFoundException e) {
+            ResponseModel response = new ResponseModel();
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            ResponseModel response = new ResponseModel();
+            response.setMessage("Sorry, there is a failure on our server.");
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    @GetMapping(value = "/get/info")
+    public ResponseEntity<ResponseModel> getAllByRoleController(@RequestParam String roleId) {
+        try {
+            List<UserInfoEntity> user = userService.findAllByRole(roleId);
+
+            ResponseModel response = new ResponseModel();
+            response.setMessage("Request successfully");
+            response.setData(user);
+            return ResponseEntity.ok(response);
+
+        } catch (ClientException e) {
+            ResponseModel response = new ResponseModel();
+            response.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        } catch (NotFoundException e) {
+            ResponseModel response = new ResponseModel();
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            ResponseModel response = new ResponseModel();
+            response.setMessage("Sorry, there is a failure on our server.");
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    @GetMapping(value = "/get/role")
+    public ResponseEntity<ResponseModel> getUsersByRoleController(@RequestParam String roleId) {
+        try {
+            List<UserEntity> users = userService.findUsersByRole(roleId);
+
+            ResponseModel response = new ResponseModel();
+            response.setMessage("Request successfully");
+            response.setData(users);
+            return ResponseEntity.ok(response);
+
         } catch (ClientException e) {
             ResponseModel response = new ResponseModel();
             response.setMessage(e.getMessage());

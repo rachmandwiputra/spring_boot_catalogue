@@ -7,42 +7,42 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ms_product")
-public class ProductEntity {
-
+@Table(name = "ms_user")
+public class UserInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "fullname")
+    private String fullname;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "role_id")
+    private String roleId;
 
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @Column(name = "category_id")
-    private String categoryId;
+    @Column(name = "role_name")
+    private String roleName;
+
+    @Column(name = "call_number")
+    private String callNumber;
 
     @Column(name = "created_date")
     private Timestamp createdDate;
 
-    @Column(name = "updated_date")
-    private Timestamp updatedDate;
-
-    @Column(name = "deleted_date")
-    private Timestamp deletedDate;
-
     @Column(name = "creator_id")
     private Integer creatorId;
 
+    @Column(name = "updated_date")
+    private Timestamp updatedDate;
+
     @Column(name = "updater_id")
     private Integer updaterId;
+
+    @Column(name = "deleted_date")
+    private Timestamp deletedDate;
 
     @Column(name = "deleter_id")
     private Integer deleterId;
@@ -58,28 +58,36 @@ public class ProductEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return this.name;
+    public String getFullname() {
+        return this.fullname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
-    public Integer getQuantity() {
-        return this.quantity;
+    public String getRoleId() {
+        return this.roleId;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 
-    public String getCategoryId() {
-        return this.categoryId;
+    public String getRoleName() {
+        return this.roleName;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getCallNumber() {
+        return this.callNumber;
+    }
+
+    public void setCallNumber(String callNumber) {
+        this.callNumber = callNumber;
     }
 
     public Timestamp getCreatedDate() {
@@ -90,22 +98,6 @@ public class ProductEntity {
         this.createdDate = createdDate;
     }
 
-    public Timestamp getUpdatedDate() {
-        return this.updatedDate;
-    }
-
-    public void setUpdatedDate(Timestamp updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
-    public Timestamp getDeletedDate() {
-        return this.deletedDate;
-    }
-
-    public void setDeletedDate(Timestamp deletedDate) {
-        this.deletedDate = deletedDate;
-    }
-
     public Integer getCreatorId() {
         return this.creatorId;
     }
@@ -114,12 +106,28 @@ public class ProductEntity {
         this.creatorId = creatorId;
     }
 
+    public Timestamp getUpdatedDate() {
+        return this.updatedDate;
+    }
+
+    public void setUpdatedDate(Timestamp updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
     public Integer getUpdaterId() {
         return this.updaterId;
     }
 
     public void setUpdaterId(Integer updaterId) {
         this.updaterId = updaterId;
+    }
+
+    public Timestamp getDeletedDate() {
+        return this.deletedDate;
+    }
+
+    public void setDeletedDate(Timestamp deletedDate) {
+        this.deletedDate = deletedDate;
     }
 
     public Integer getDeleterId() {
