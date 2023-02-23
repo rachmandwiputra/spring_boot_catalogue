@@ -14,7 +14,6 @@ import id.co.nds.catalogue.exceptions.NotFoundException;
 import id.co.nds.catalogue.globals.GlobalConstant;
 import id.co.nds.catalogue.models.UserModel;
 import id.co.nds.catalogue.repos.UserInfoRepo;
-import id.co.nds.catalogue.repos.UserInfoRepo;
 import id.co.nds.catalogue.repos.UserRepo;
 import id.co.nds.catalogue.repos.specs.UserSpec;
 import id.co.nds.catalogue.validators.RoleValidator;

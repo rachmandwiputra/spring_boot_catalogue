@@ -20,6 +20,7 @@ import id.co.nds.catalogue.exceptions.ClientException;
 import id.co.nds.catalogue.exceptions.NotFoundException;
 import id.co.nds.catalogue.models.ResponseModel;
 import id.co.nds.catalogue.models.UserModel;
+import id.co.nds.catalogue.producer.KafkaProducerImp;
 import id.co.nds.catalogue.services.UserService;
 
 @RestController
@@ -28,6 +29,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private KafkaProducerImp kafkaProducerImpl;
 
     @PostMapping(value = "/add")
     public ResponseEntity<ResponseModel> addUser(
@@ -219,4 +223,29 @@ public class UserController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+
+    @GetMapping(value = "/kafka")
+    public ResponseEntity<ResponseModel> kafkaAllUser() {
+        try {
+            List<UserEntity> users = userService.findAll();
+
+            ResponseModel response = new ResponseModel();
+            response.setMessage("Request successfully");
+            for (UserEntity user : users) {
+                kafkaProducerImpl.sendMessage(user.getRoleId());
+                System.out
+                        .println("Successfully sent user role id = '" + user.getRoleId()
+                                + "' to the CatalogueTopic");
+                Thread.sleep(4000);
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ResponseModel response = new ResponseModel();
+            response.setMessage("Sorry, there is a failure on our server.");
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
 }
