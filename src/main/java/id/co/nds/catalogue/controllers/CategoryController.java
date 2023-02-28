@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import id.co.nds.catalogue.entities.CategoryEntity;
@@ -27,6 +29,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @CrossOrigin
     @PostMapping(value = "/add")
     public ResponseEntity<ResponseModel> postCategoryController(
             @RequestBody CategoryModel categoryModel) {
@@ -39,8 +42,6 @@ public class CategoryController {
 
             return ResponseEntity.ok(response);
         } catch (ClientException e) {
-            // TODO: handle exception
-
             ResponseModel response = new ResponseModel();
             response.setMessage(e.getMessage());
             return ResponseEntity.badRequest().body(response);
@@ -52,6 +53,7 @@ public class CategoryController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost")
     @GetMapping(value = "/get")
     public ResponseEntity<ResponseModel> getAllCategoryController() {
         try {
@@ -95,6 +97,7 @@ public class CategoryController {
         }
     }
 
+    @CrossOrigin
     @PutMapping(value = "/update")
     public ResponseEntity<ResponseModel> putCategoryController(
             @RequestBody CategoryModel categoryModel) {
@@ -122,10 +125,11 @@ public class CategoryController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseModel> deleteCategoryController(@RequestBody CategoryModel categoryModel) {
+    public ResponseEntity<ResponseModel> deleteCategoryController(@RequestParam String id, Integer actorId) {
         try {
-            CategoryEntity category = categoryService.delete(categoryModel);
+            CategoryEntity category = categoryService.delete(id, actorId);
 
             ResponseModel response = new ResponseModel();
             response.setMessage("Category is successfully deleted");

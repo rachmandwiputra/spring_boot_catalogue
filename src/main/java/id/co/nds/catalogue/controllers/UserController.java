@@ -45,8 +45,6 @@ public class UserController {
 
             return ResponseEntity.ok(response);
         } catch (ClientException e) {
-            // TODO: handle exception
-
             ResponseModel response = new ResponseModel();
             response.setMessage(e.getMessage());
             return ResponseEntity.badRequest().body(response);
@@ -199,9 +197,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/delete")
-    public ResponseEntity<ResponseModel> deleteUser(@RequestBody UserModel userModel) {
+    public ResponseEntity<ResponseModel> deleteUser(@RequestParam Integer id, Integer actorId) {
         try {
-            UserEntity user = userService.delete(userModel);
+            UserEntity user = userService.delete(id, actorId);
 
             ResponseModel response = new ResponseModel();
             response.setMessage("User is successfully deleted");
@@ -232,7 +230,7 @@ public class UserController {
             ResponseModel response = new ResponseModel();
             response.setMessage("Request successfully");
             for (UserEntity user : users) {
-                kafkaProducerImpl.sendMessage(user.getRoleId());
+                kafkaProducerImpl.sendMessage(user.getFullname());
                 System.out
                         .println("Successfully sent user role id = '" + user.getRoleId()
                                 + "' to the CatalogueTopic");

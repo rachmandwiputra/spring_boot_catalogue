@@ -5,15 +5,15 @@ import id.co.nds.catalogue.exceptions.NotFoundException;
 import id.co.nds.catalogue.globals.GlobalConstant;
 
 public class RoleValidator {
-    public void nullCheckRoleId(String id) throws ClientException {
-        if (id == null) {
-            throw new ClientException("Role id is requred");
-        }
-    }
-
     public void notNullCheckRoleId(String id) throws ClientException {
         if (id != null) {
             throw new ClientException("Role id is auto generated, do not input id");
+        }
+    }
+
+    public void nullCheckRoleId(String id) throws ClientException {
+        if (id == null) {
+            throw new ClientException("Role id is requred");
         }
     }
 

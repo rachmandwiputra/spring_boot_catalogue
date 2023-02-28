@@ -41,12 +41,6 @@ public class ProductValidator {
         }
     }
 
-    public void validateProductId(Integer id) throws ClientException {
-        if (id <= 0) {
-            throw new ClientException("Product id input is invalid");
-        }
-    }
-
     public void validateName(String name) throws ClientException {
         if (name.trim().equalsIgnoreCase("")) {
             throw new ClientException("Product name is required");
@@ -60,8 +54,8 @@ public class ProductValidator {
     }
 
     public void validateCategoryId(String categoryId) throws ClientException {
-        if (categoryId.length() != 6 || !categoryId.startsWith("PC")) {
-            throw new ClientException("Product category id contains six digits and stars with PC");
+        if (categoryId.length() != 6 || !categoryId.startsWith("P")) {
+            throw new ClientException("Product category id contains six digits and stars with P");
         }
     }
 

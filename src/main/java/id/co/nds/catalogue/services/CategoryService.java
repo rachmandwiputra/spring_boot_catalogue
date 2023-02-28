@@ -48,7 +48,7 @@ public class CategoryService {
 
     public List<CategoryEntity> findAll() {
         List<CategoryEntity> categories = new ArrayList<>();
-        categoryRepo.findAll().forEach(categories::add);
+        categoryRepo.allCategorySortedById().forEach(categories::add);
 
         return categories;
     }
@@ -93,24 +93,24 @@ public class CategoryService {
         return categoryRepo.save(category);
     }
 
-    public CategoryEntity delete(CategoryModel categoryModel) throws ClientException, NotFoundException {
-        categoryValidator.nullCheckCategoryId(categoryModel.getId());
-        categoryValidator.validateCategoryId(categoryModel.getId());
+    public CategoryEntity delete(String id, Integer actorId) throws ClientException, NotFoundException {
+        categoryValidator.nullCheckCategoryId(id);
+        categoryValidator.validateCategoryId(id);
 
-        if (!categoryRepo.existsById(categoryModel.getId())) {
-            throw new NotFoundException("Cannot find category with id: " + categoryModel.getId());
+        if (!categoryRepo.existsById(id)) {
+            throw new NotFoundException("Cannot find category with id: " + id);
         }
 
         CategoryEntity category = new CategoryEntity();
-        category = findById(categoryModel.getId());
+        category = findById(id);
 
         if (category.getRecStatus().equalsIgnoreCase(GlobalConstant.REC_STATUS_NON_ACTIVE)) {
-            throw new ClientException("Category id (" + categoryModel.getId() + ") is already been deleted.");
+            throw new ClientException("Category id (" + id + ") is already been deleted.");
         }
 
         category.setRecStatus(GlobalConstant.REC_STATUS_NON_ACTIVE);
         category.setDeletedDate(new Timestamp(System.currentTimeMillis()));
-        category.setDeleterId(categoryModel.getActorId() == null ? 0 : categoryModel.getActorId());
+        category.setDeleterId(actorId == null ? 0 : actorId);
 
         return categoryRepo.save(category);
     }

@@ -147,24 +147,24 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    public UserEntity delete(UserModel userModel) throws ClientException, NotFoundException {
-        userValidator.nullCheckUserId(userModel.getId());
-        userValidator.validateUserId(userModel.getId());
+    public UserEntity delete(Integer id, Integer actorId) throws ClientException, NotFoundException {
+        userValidator.nullCheckUserId(id);
+        userValidator.validateUserId(id);
 
-        if (!userRepo.existsById(userModel.getId())) {
-            throw new NotFoundException("Cannot find user with id: " + userModel.getId());
+        if (!userRepo.existsById(id)) {
+            throw new NotFoundException("Cannot find user with id: " + id);
         }
 
         UserEntity user = new UserEntity();
-        user = findById(userModel.getId());
+        user = findById(id);
 
         if (user.getRecStatus().equalsIgnoreCase(GlobalConstant.REC_STATUS_NON_ACTIVE)) {
-            throw new ClientException("User id (" + userModel.getId() + ") is already been deleted.");
+            throw new ClientException("User id (" + id + ") is already been deleted.");
         }
 
         user.setRecStatus(GlobalConstant.REC_STATUS_NON_ACTIVE);
         user.setDeletedDate(new Timestamp(System.currentTimeMillis()));
-        user.setDeleterId(userModel.getActorId() == null ? 0 : userModel.getActorId());
+        user.setDeleterId(actorId == null ? 0 : actorId);
 
         // Alternative Delete Fuction
         // productRepo.doDelete(product.getId(), product.getDeleterId());

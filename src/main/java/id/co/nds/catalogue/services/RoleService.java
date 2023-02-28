@@ -93,24 +93,24 @@ public class RoleService {
         return roleRepo.save(role);
     }
 
-    public RoleEntity delete(RoleModel roleModel) throws ClientException, NotFoundException {
-        roleValidator.nullCheckRoleId(roleModel.getId());
-        roleValidator.validateRoleId(roleModel.getId());
+    public RoleEntity delete(String id, Integer actorId) throws ClientException, NotFoundException {
+        roleValidator.nullCheckRoleId(id);
+        roleValidator.validateRoleId(id);
 
-        if (!roleRepo.existsById(roleModel.getId())) {
-            throw new NotFoundException("Cannot find role with id: " + roleModel.getId());
+        if (!roleRepo.existsById(id)) {
+            throw new NotFoundException("Cannot find role with id: " + id);
         }
 
         RoleEntity role = new RoleEntity();
-        role = findById(roleModel.getId());
+        role = findById(id);
 
         if (role.getRecStatus().equalsIgnoreCase(GlobalConstant.REC_STATUS_NON_ACTIVE)) {
-            throw new ClientException("Role id (" + roleModel.getId() + ") is already been deleted.");
+            throw new ClientException("Role id (" + id + ") is already been deleted.");
         }
 
         role.setRecStatus(GlobalConstant.REC_STATUS_NON_ACTIVE);
         role.setDeletedDate(new Timestamp(System.currentTimeMillis()));
-        role.setDeleterId(roleModel.getActorId() == null ? 0 : roleModel.getActorId());
+        role.setDeleterId(actorId == null ? 0 : actorId);
 
         return roleRepo.save(role);
     }

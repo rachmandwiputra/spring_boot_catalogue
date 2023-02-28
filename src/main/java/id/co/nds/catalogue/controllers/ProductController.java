@@ -41,8 +41,6 @@ public class ProductController {
 
             return ResponseEntity.ok(response);
         } catch (ClientException e) {
-            // TODO: handle exception
-
             ResponseModel response = new ResponseModel();
             response.setMessage(e.getMessage());
             return ResponseEntity.badRequest().body(response);
@@ -195,9 +193,9 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseModel> deleteProductController(@RequestBody ProductModel productModel) {
+    public ResponseEntity<ResponseModel> deleteProductController(@RequestParam Integer productId, Integer actorId) {
         try {
-            ProductEntity product = productService.delete(productModel);
+            ProductEntity product = productService.delete(productId, actorId);
 
             ResponseModel response = new ResponseModel();
             response.setMessage("Product is successfully deleted");

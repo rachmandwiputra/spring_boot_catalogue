@@ -29,6 +29,8 @@ public class ProductService implements Serializable {
     @Autowired
     private ProductInfoRepo productInfoRepo;
 
+    // private ProductTrxService productTrxService;
+
     ProductValidator productValidator = new ProductValidator();
     CategoryValidator categoryValidator = new CategoryValidator();
 
@@ -41,6 +43,7 @@ public class ProductService implements Serializable {
         productValidator.nullCheckCategoryId(productModel.getCategoryId());
         productValidator.validateCategoryId(productModel.getCategoryId());
 
+        System.out.println("masuk");
         Long count = productRepo.countByName(productModel.getName());
 
         if (count > 0) {
@@ -75,7 +78,6 @@ public class ProductService implements Serializable {
 
     public ProductEntity findById(Integer id) throws ClientException, NotFoundException {
         productValidator.nullCheckProductId(id);
-        productValidator.validateProductId(id);
 
         ProductEntity product = productRepo.findById(id).orElse(null);
         productValidator.nullCheckObject(product);
@@ -105,7 +107,6 @@ public class ProductService implements Serializable {
 
     public ProductEntity edit(ProductModel productModel) throws ClientException, NotFoundException {
         productValidator.nullCheckProductId(productModel.getId());
-        productValidator.validateProductId(productModel.getId());
 
         if (!productRepo.existsById(productModel.getId())) {
             throw new NotFoundException("Cannot find product with id " + productModel.getId());
@@ -144,24 +145,23 @@ public class ProductService implements Serializable {
         return productRepo.save(product);
     }
 
-    public ProductEntity delete(ProductModel productModel) throws ClientException, NotFoundException {
-        productValidator.nullCheckProductId(productModel.getId());
-        productValidator.validateProductId(productModel.getId());
+    public ProductEntity delete(Integer productId, Integer actorId) throws ClientException, NotFoundException {
+        productValidator.nullCheckProductId(productId);
 
-        if (!productRepo.existsById(productModel.getId())) {
-            throw new NotFoundException("Cannot find product with id: " + productModel.getId());
+        if (!productRepo.existsById(productId)) {
+            throw new NotFoundException("Cannot find product with id: " + productId);
         }
 
         ProductEntity product = new ProductEntity();
-        product = findById(productModel.getId());
+        product = findById(productId);
 
         if (product.getRecStatus().equalsIgnoreCase(GlobalConstant.REC_STATUS_NON_ACTIVE)) {
-            throw new ClientException("Product id (" + productModel.getId() + ") is already been deleted.");
+            throw new ClientException("Product id (" + productId + ") is already been deleted.");
         }
 
         product.setRecStatus(GlobalConstant.REC_STATUS_NON_ACTIVE);
         product.setDeletedDate(new Timestamp(System.currentTimeMillis()));
-        product.setDeleterId(productModel.getActorId() == null ? 0 : productModel.getActorId());
+        product.setDeleterId(actorId == null ? 0 : actorId);
 
         // Alternative Delete Fuction
         // productRepo.doDelete(product.getId(), product.getDeleterId());
@@ -169,4 +169,31 @@ public class ProductService implements Serializable {
 
         return productRepo.save(product);
     }
+
+    // public ResponseEntity<String> addMany(List<ProductModel> models){
+    // ResponseModel response = new ResponseModel();
+
+    // try {
+    // List<ProductEntity> arData = null;
+    // arData = productTrxService.doSave(models);
+
+    // response.setMessage("Successfully create new products");
+    // response.setData((arData == null) ? "" : arData.toString());
+
+    // String c = null;
+    // if(arData == null)
+    // {
+    // c = "";
+    // }else{
+    // c = arData.toString();
+    // }
+
+    // return new ResponseEntity<String>()
+    // } catch (Exception e) {
+    // response.setMessage(e.getMessage());
+    // e.printStackTrace();
+
+    // return new ResponseEntity<>(Global)
+    // }
+    // }
 }

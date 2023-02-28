@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import id.co.nds.catalogue.entities.RoleEntity;
@@ -39,8 +40,6 @@ public class RoleController {
 
             return ResponseEntity.ok(response);
         } catch (ClientException e) {
-            // TODO: handle exception
-
             ResponseModel response = new ResponseModel();
             response.setMessage(e.getMessage());
             return ResponseEntity.badRequest().body(response);
@@ -123,9 +122,9 @@ public class RoleController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseModel> deleteRoleController(@RequestBody RoleModel roleModel) {
+    public ResponseEntity<ResponseModel> deleteRoleController(@RequestParam String id, Integer actorId) {
         try {
-            RoleEntity role = roleService.delete(roleModel);
+            RoleEntity role = roleService.delete(id, actorId);
 
             ResponseModel response = new ResponseModel();
             response.setMessage("Role is successfully deleted");
